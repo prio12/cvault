@@ -18,6 +18,8 @@ interface AuthState {
   clearError: () => void;
 }
 
+const API = import.meta.env.VITE_API_URL;
+
 export const useAuthStore = create<AuthState>((set) => ({
   user:
     typeof window !== "undefined"
@@ -31,7 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (credentials) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
@@ -57,7 +59,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (userData) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${API}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),

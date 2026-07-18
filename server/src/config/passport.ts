@@ -42,6 +42,11 @@ export const initPassport = () => {
                 name: profile.displayName,
                 avatarUrl: profile.photos?.[0]?.value || null,
                 role: "CANDIDATE",
+                profile: {
+                  create: {
+                    version: 0,
+                  },
+                },
               },
             });
           }
@@ -122,9 +127,14 @@ export const initPassport = () => {
             user = await prisma.user.create({
               data: {
                 email,
-                name: profile.displayName || profile.username,
+                name: profile.displayName,
                 avatarUrl: profile.photos?.[0]?.value || null,
                 role: "CANDIDATE",
+                profile: {
+                  create: {
+                    version: 0,
+                  },
+                },
               },
             });
           }

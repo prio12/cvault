@@ -3,6 +3,8 @@ import prisma from "../lib/db";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../helpers";
 
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+
 export const register = async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
 
@@ -21,6 +23,11 @@ export const register = async (req: Request, res: Response) => {
         password: hashedPassword,
         name: name || null,
         role: "CANDIDATE",
+        profile: {
+          create: {
+            version: 0,
+          },
+        },
       },
     });
 
@@ -108,7 +115,7 @@ export const login = async (req: Request, res: Response) => {
 // Google Callback Controller
 export const googleCallback = (req: Request, res: Response) => {
   if (!req.user) {
-    return res.redirect("http://localhost:5173/login?error=Unauthorized");
+    return res.redirect(`${CLIENT_URL}/login?error=Unauthorized`);
   }
 
   const user = req.user as any;
@@ -123,15 +130,13 @@ export const googleCallback = (req: Request, res: Response) => {
   };
 
   const encodedUser = encodeURIComponent(JSON.stringify(userData));
-  res.redirect(
-    `http://localhost:5173/auth-success?token=${token}&user=${encodedUser}`,
-  );
+  res.redirect(`${CLIENT_URL}/auth-success?token=${token}&user=${encodedUser}`);
 };
 
 // GitHub Callback Controller
 export const githubCallback = (req: Request, res: Response) => {
   if (!req.user) {
-    return res.redirect("http://localhost:5173/login?error=Unauthorized");
+    return res.redirect(`${CLIENT_URL}/login?error=Unauthorized`);
   }
 
   const user = req.user as any;
@@ -146,7 +151,5 @@ export const githubCallback = (req: Request, res: Response) => {
   };
 
   const encodedUser = encodeURIComponent(JSON.stringify(userData));
-  res.redirect(
-    `http://localhost:5173/auth-success?token=${token}&user=${encodedUser}`,
-  );
+  res.redirect(`${CLIENT_URL}/auth-success?token=${token}&user=${encodedUser}`);
 };

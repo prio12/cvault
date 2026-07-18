@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated"
@@ -14,6 +13,21 @@ enum Role {
   ADMIN
 }
 
+enum DataType {
+  STRING
+  TEXT
+  NUMERIC
+  BOOLEAN
+  DATE
+  DROPDOWN
+  IMAGE
+}
+
+enum CVStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -23,19 +37,178 @@ model User {
   role      Role     @default(CANDIDATE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   accounts  Account[]
+  profile   Profile?
+  posts     DiscussionPost[]
+  cvLikes   CVLike[]
 }
 
 model Account {
   id                String   @id @default(uuid())
   userId            String
-  provider          String 
-  providerAccountId String   
+  provider          String
+  providerAccountId String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  location  String?
+  version   Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profileAttributes   ProfileAttribute[]
+  projects            Project[]
+  cvs                 CV[]
+}
+
+model Attribute {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  category    String
+  description String?
+  dataType    DataType
+  createdAt   DateTime  @default(now())
+
+  profileAttributes  ProfileAttribute[]
+  positionAttributes PositionAttribute[]
+  accessRules        AccessRule[]
+}
+
+model ProfileAttribute {
+  id          String    @id @default(uuid())
+  profileId   String
+  attributeId String
+  value       String?
+  updatedAt   DateTime  @updatedAt
+
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, attributeId])
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  profileId   String
+  name        String
+  startDate   DateTime
+  endDate     DateTime?
+  description String
+  createdAt   DateTime  @default(now())
+
+  profile     Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  tags        ProjectTag[]
+}
+
+model Tag {
+  id        String       @id @default(uuid())
+  name      String       @unique
+
+  projects  ProjectTag[]
+  positions PositionTag[]
+}
+
+model ProjectTag {
+  projectId String
+  tagId     String
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, tagId])
+}
+
+model Position {
+  id          String   @id @default(uuid())
+  title       String
+  company     String?
+  description String?
+  level       String?
+  isPublic    Boolean  @default(true)
+  maxProjects Int      @default(3)
+  version     Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  attributes  PositionAttribute[]
+  tags        PositionTag[]
+  accessRules AccessRule[]
+  cvs         CV[]
+  posts       DiscussionPost[]
+}
+
+model PositionAttribute {
+  positionId  String
+  attributeId String
+  orderIndex  Int       @default(0)
+
+  position    Position  @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, attributeId])
+}
+
+model PositionTag {
+  positionId String
+  tagId      String
+
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, tagId])
+}
+
+model AccessRule {
+  id          String    @id @default(uuid())
+  positionId  String
+  attributeId String
+  operator    String
+  value       String
+
+  position    Position  @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+}
+
+model CV {
+  id         String   @id @default(uuid())
+  profileId  String
+  positionId String
+  status     CVStatus @default(DRAFT)
+  createdAt  DateTime @default(now())
+
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  likes      CVLike[]
+
+  @@unique([profileId, positionId])
+}
+
+model CVLike {
+  cvId        String
+  recruiterId String
+  createdAt   DateTime @default(now())
+
+  cv          CV   @relation(fields: [cvId], references: [id], onDelete: Cascade)
+  recruiter   User @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  @@id([cvId, recruiterId])
+}
+
+model DiscussionPost {
+  id         String   @id @default(uuid())
+  positionId String
+  userId     String
+  content    String
+  createdAt  DateTime @default(now())
+
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
