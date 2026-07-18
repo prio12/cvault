@@ -24,7 +24,7 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = (provider: "google" | "github") => {
-    window.location.href = `http://localhost:5000/api/auth/${provider}`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/${provider}`;
   };
 
   return (
