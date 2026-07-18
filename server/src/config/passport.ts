@@ -11,7 +11,12 @@ export const initPassport = () => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         callbackURL: process.env.GOOGLE_CALLBACK_URL!,
       },
-      async (profile: any, done: any) => {
+      async (
+        accessToken: string,
+        refreshToken: string,
+        profile: any,
+        done: any,
+      ) => {
         try {
           const email = profile.emails?.[0]?.value;
           if (!email)
@@ -63,15 +68,42 @@ export const initPassport = () => {
         clientID: process.env.GITHUB_CLIENT_ID!,
         clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         callbackURL: process.env.GITHUB_CALLBACK_URL!,
+        scope: ["user:email"],
       },
-      async (profile: any, done: any) => {
+      async (
+        accessToken: string,
+        refreshToken: string,
+        profile: any,
+        done: any,
+      ) => {
         try {
-          const email = profile.emails?.[0]?.value;
-          if (!email)
+          let email = profile.emails?.[0]?.value;
+
+          if (!email) {
+            const emailResponse = await fetch(
+              "https://api.github.com/user/emails",
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  "User-Agent": "cvault-server",
+                },
+              },
+            );
+
+            if (emailResponse.ok) {
+              const emails = (await emailResponse.json()) as any[];
+              const primaryEmailObj =
+                emails.find((e) => e.primary) || emails[0];
+              email = primaryEmailObj?.email;
+            }
+          }
+
+          if (!email) {
             return done(
-              new Error("No public email found in GitHub profile"),
+              new Error("No email associated with this GitHub account"),
               false,
             );
+          }
 
           let account = await prisma.account.findUnique({
             where: {

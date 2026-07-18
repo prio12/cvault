@@ -1,27 +1,21 @@
-# Dependencies
 node_modules/
 
-# Environment variables
 .env
 .env.local
 
-# Build outputs
+/server/src/generated/
+
 dist/
 build/
 
-# Vite
 client/dist/
 
-# TypeScript
 *.tsbuildinfo
 
-# OS files
 .DS_Store
 Thumbs.db
 
-# Vercel
 .vercel
 
-# Logs
 *.log
 npm-debug.log*

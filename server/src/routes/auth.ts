@@ -2,14 +2,18 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import { generateToken } from "../helpers";
+import {
+  githubCallback,
+  googleCallback,
+  login,
+  register,
+} from "../controllers/authController";
 
 const router = Router();
 
-const generateToken = (user: any): string => {
-  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!, {
-    expiresIn: "7d",
-  });
-};
+router.post("/register", register);
+router.post("/login", login);
 
 //google provider
 router.get(
@@ -26,16 +30,13 @@ router.get(
     failureRedirect: "/login",
     session: false,
   }),
-  (req, res) => {
-    const token = generateToken(req.user);
-    res.redirect(`http://localhost:3000/auth-success?token=${token}`);
-  },
+  googleCallback,
 );
 
 //github provider
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user:email"], session: false }),
+  passport.authenticate("github", { scope: ["user:email"] }),
 );
 
 router.get(
@@ -44,10 +45,7 @@ router.get(
     failureRedirect: "/login",
     session: false,
   }),
-  (req, res) => {
-    const token = generateToken(req.user);
-    res.redirect(`http://localhost:3000/auth-success?token=${token}`);
-  },
+  githubCallback,
 );
 
 export default router;
