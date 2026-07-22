@@ -5,6 +5,7 @@ import "./App.css";
 import Login from "./pages/authentications/Login";
 import Register from "./pages/authentications/Register";
 import AuthSuccessPage from "./pages/authentications/AuthSuccess";
+import Profile from "./pages/Profile";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("token");
@@ -19,6 +20,14 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/auth-success" element={<AuthSuccessPage />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/dashboard"

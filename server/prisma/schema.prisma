@@ -44,6 +44,9 @@ model User {
   cvLikes   CVLike[]
 }
 
+
+
+
 model Account {
   id                String   @id @default(uuid())
   userId            String
@@ -56,6 +59,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
 }
+
 
 model Profile {
   id        String   @id @default(uuid())
