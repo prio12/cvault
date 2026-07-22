@@ -1,2 +1,39 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes:
+    cvaultlight --default,
+    cvaultdark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "cvaultlight";
+  default: true;
+  color-scheme: light;
+  --color-base-100: oklch(98% 0 0);
+  --color-base-200: oklch(95% 0 0);
+  --color-base-300: oklch(90% 0 0);
+  --color-base-content: oklch(25% 0.02 264);
+  --color-primary: oklch(60% 0.14 163); /* emerald */
+  --color-primary-content: oklch(98% 0.02 163);
+  --color-secondary: oklch(55% 0.02 264); /* zinc */
+  --color-secondary-content: oklch(98% 0 0);
+  --color-accent: oklch(65% 0.15 163);
+  --color-neutral: oklch(30% 0.01 264); /* zinc */
+  --color-neutral-content: oklch(95% 0 0);
+}
+
+@plugin "daisyui/theme" {
+  name: "cvaultdark";
+  color-scheme: dark;
+  --color-base-100: oklch(20% 0.01 264); /* zinc-900ish */
+  --color-base-200: oklch(16% 0.01 264);
+  --color-base-300: oklch(12% 0.01 264);
+  --color-base-content: oklch(90% 0 0);
+  --color-primary: oklch(65% 0.15 163); /* emerald */
+  --color-primary-content: oklch(15% 0.02 163);
+  --color-secondary: oklch(70% 0.01 264);
+  --color-secondary-content: oklch(15% 0 0);
+  --color-accent: oklch(70% 0.16 163);
+  --color-neutral: oklch(30% 0.01 264);
+  --color-neutral-content: oklch(95% 0 0);
+}
