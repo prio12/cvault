@@ -1,6 +1,7 @@
 import { Response } from "express";
 import prisma from "../lib/db";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { validateAttributeValue } from "../lib/validateAttributeValue";
 
 export const createCV = async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
@@ -134,6 +135,20 @@ export const updateCVAttribute = async (
   const isAdmin = requester.role === "ADMIN";
   if (!isOwner && !isAdmin) {
     return res.status(403).json({ error: "Not authorized to edit this CV" });
+  }
+
+  const attribute = await prisma.attribute.findUnique({
+    where: { id: attributeId },
+  });
+  if (!attribute) return res.status(404).json({ error: "Attribute not found" });
+
+  const validationError = validateAttributeValue(
+    attribute.dataType,
+    value,
+    attribute.options,
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
   }
 
   const updated = await prisma.profileAttribute.upsert({

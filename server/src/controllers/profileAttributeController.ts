@@ -1,6 +1,7 @@
 import { Response } from "express";
 import prisma from "../lib/db";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { validateAttributeValue } from "../lib/validateAttributeValue";
 
 export const getProfileAttributes = async (
   req: AuthenticatedRequest,
@@ -62,6 +63,22 @@ export const updateProfileAttribute = async (
   const profile = await prisma.profile.findUnique({ where: { userId } });
   if (!profile) return res.status(404).json({ error: "Profile not found" });
 
+  const existing = await prisma.profileAttribute.findUnique({
+    where: { profileId_attributeId: { profileId: profile.id, attributeId } },
+    include: { attribute: true },
+  });
+  if (!existing)
+    return res.status(404).json({ error: "Attribute not found on profile" });
+
+  const validationError = validateAttributeValue(
+    existing.attribute.dataType,
+    value,
+    existing.attribute.options,
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
+
   try {
     const updated = await prisma.profileAttribute.update({
       where: { profileId_attributeId: { profileId: profile.id, attributeId } },
@@ -70,14 +87,10 @@ export const updateProfileAttribute = async (
     });
     res.json(updated);
   } catch (err: any) {
-    if (err.code === "P2025") {
-      return res.status(404).json({ error: "Attribute not found on profile" });
-    }
     console.error("Error updating profile attribute:", err);
     res.status(500).json({ error: "Failed to update attribute" });
   }
 };
-
 export const removeProfileAttribute = async (
   req: AuthenticatedRequest,
   res: Response,
