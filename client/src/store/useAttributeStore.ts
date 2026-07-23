@@ -18,6 +18,7 @@ export interface Attribute {
   category: string;
   dataType: DataType;
   description: string | null;
+  options: string[];
 }
 
 interface AttributeState {

@@ -35,10 +35,24 @@ export default function AttributeModal({
     attribute?.dataType || "STRING",
   );
   const [description, setDescription] = useState(attribute?.description || "");
+  const [optionsText, setOptionsText] = useState(
+    (attribute?.options || []).join("\n"),
+  );
+
+  const handleSave = () => {
+    const options =
+      dataType === "DROPDOWN"
+        ? optionsText
+            .split("\n")
+            .map((o) => o.trim())
+            .filter(Boolean)
+        : [];
+    onSave({ name, category: cat, dataType, description, options });
+  };
 
   return (
-    <div className="modal modal-open max-h-[90vh] overflow-y-auto">
-      <div className="modal-box">
+    <div className="modal modal-open">
+      <div className="modal-box max-h-[90vh] overflow-y-auto">
         <h3 className="font-bold text-lg mb-4">
           {attribute ? "Edit Attribute" : "New Attribute"}
         </h3>
@@ -75,6 +89,20 @@ export default function AttributeModal({
             </option>
           ))}
         </select>
+        {dataType === "DROPDOWN" && (
+          <>
+            <label className="label">
+              Options (one per line — e.g. Beginner / Intermediate / Advanced)
+            </label>
+            <textarea
+              className="textarea textarea-bordered w-full mb-3"
+              rows={4}
+              value={optionsText}
+              onChange={(e) => setOptionsText(e.target.value)}
+              placeholder={"Beginner\nIntermediate\nAdvanced"}
+            />
+          </>
+        )}
 
         <label className="label">Description (optional)</label>
         <textarea
@@ -87,12 +115,7 @@ export default function AttributeModal({
           <button className="btn btn-ghost" onClick={onClose}>
             Cancel
           </button>
-          <button
-            className="btn btn-primary"
-            onClick={() =>
-              onSave({ name, category: cat, dataType, description })
-            }
-          >
+          <button className="btn btn-primary" onClick={handleSave}>
             Save
           </button>
         </div>
