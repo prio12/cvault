@@ -8,6 +8,7 @@ import profileRouter from "./routes/profile";
 import attributesRouter from "./routes/attributes";
 import positionsRouter from "./routes/positions";
 import profileAttributesRouter from "./routes/profileAttributes";
+import cvRouter from "./routes/cv";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +25,7 @@ app.use("/api/profile", profileRouter);
 app.use("/api/attributes", attributesRouter);
 app.use("/api/positions", positionsRouter);
 app.use("/api/profile/attributes", profileAttributesRouter);
+app.use("/api/cv", cvRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
