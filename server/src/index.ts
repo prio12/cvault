@@ -7,6 +7,7 @@ import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
 import attributesRouter from "./routes/attributes";
 import positionsRouter from "./routes/positions";
+import profileAttributesRouter from "./routes/profileAttributes";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/attributes", attributesRouter);
 app.use("/api/positions", positionsRouter);
+app.use("/api/profile/attributes", profileAttributesRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

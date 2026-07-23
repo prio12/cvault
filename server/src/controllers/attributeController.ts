@@ -34,7 +34,7 @@ export const createAttribute = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const { name, category, dataType, description } = req.body;
+  const { name, category, dataType, description, options } = req.body;
 
   if (!name || !category || !dataType) {
     return res
@@ -44,7 +44,13 @@ export const createAttribute = async (
 
   try {
     const attribute = await prisma.attribute.create({
-      data: { name, category, dataType, description },
+      data: {
+        name,
+        category,
+        dataType,
+        description,
+        options: Array.isArray(options) ? options : [],
+      },
     });
     res.status(201).json(attribute);
   } catch (err: any) {
@@ -63,12 +69,18 @@ export const updateAttribute = async (
   res: Response,
 ) => {
   const id = String(req.params.id);
-  const { name, category, dataType, description } = req.body;
+  const { name, category, dataType, description, options } = req.body;
 
   try {
     const attribute = await prisma.attribute.update({
       where: { id },
-      data: { name, category, dataType, description },
+      data: {
+        name,
+        category,
+        dataType,
+        description,
+        options: Array.isArray(options) ? options : [],
+      },
     });
     res.json(attribute);
   } catch (err: any) {

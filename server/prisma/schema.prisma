@@ -80,6 +80,7 @@ model Attribute {
   category    String
   description String?
   dataType    DataType
+  options     String[]  @default([])
   createdAt   DateTime  @default(now())
 
   profileAttributes  ProfileAttribute[]
