@@ -18,7 +18,7 @@ export default function AuthSuccessPage() {
 
         useAuthStore.setState({ user: realUser });
 
-        navigate("/dashboard");
+        navigate("/positions");
       } catch (error) {
         console.error("Failed to parse OAuth user data", error);
         navigate("/login");
