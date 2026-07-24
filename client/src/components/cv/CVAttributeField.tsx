@@ -39,7 +39,7 @@ export default function CVAttributeField({
   if (!editable) {
     return (
       <div className="py-2">
-        <div className="text-xs text-base-content/60">{attr.name}</div>
+        <div className="text-xs text-base-content/60 mb-2">{attr.name}</div>
         <div className={isEmpty ? "text-error font-medium" : ""}>
           {isEmpty ? "(empty)" : attr.value}
         </div>
@@ -51,7 +51,7 @@ export default function CVAttributeField({
 
   return (
     <div className="py-2">
-      <div className="text-xs text-base-content/60 flex items-center gap-2">
+      <div className="text-xs text-base-content/60 flex items-center gap-2 mb-2">
         {attr.name}
         {saveState === "saving" && (
           <span className="loading loading-spinner loading-xs" />

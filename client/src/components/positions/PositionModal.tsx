@@ -15,8 +15,6 @@ export default function PositionModal({
 }) {
   const { attributes, fetchAttributes } = useAttributeStore();
 
-  console.log(position, "from position modal");
-
   const [title, setTitle] = useState(position?.title || "");
   const [company, setCompany] = useState(position?.company || "");
   const [description, setDescription] = useState(position?.description || "");
@@ -68,16 +66,16 @@ export default function PositionModal({
           {position ? "Edit Position" : "New Position"}
         </h3>
 
-        <label className="label">Title</label>
+        <label className="label mb-1">Title</label>
         <input
-          className="input input-bordered w-full mb-3"
+          className="input input-bordered w-full mb-4"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
-            <label className="label">Company</label>
+            <label className="label mb-1">Company</label>
             <input
               className="input input-bordered w-full"
               value={company}
@@ -85,7 +83,7 @@ export default function PositionModal({
             />
           </div>
           <div>
-            <label className="label">Level</label>
+            <label className="label mb-1">Level</label>
             <select
               className="select select-bordered w-full"
               value={level}
@@ -100,27 +98,27 @@ export default function PositionModal({
           </div>
         </div>
 
-        <label className="label">Short Description</label>
+        <label className="label mb-1">Short Description</label>
         <textarea
-          className="textarea textarea-bordered w-full mb-3"
+          className="textarea textarea-bordered w-full mb-4"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="form-control">
-            <label className="label cursor-pointer justify-start gap-2  ">
-              <input
-                type="checkbox"
-                className="toggle toggle-primary"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-              />
-              <span className="label-text">Public</span>
-            </label>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label className="label mb-1">Access</label>
+            <select
+              className="select select-bordered w-full"
+              value={isPublic ? "public" : "restricted"}
+              onChange={(e) => setIsPublic(e.target.value === "public")}
+            >
+              <option value="public">Public</option>
+              <option value="restricted">Restricted</option>
+            </select>
           </div>
           <div>
-            <label className="label">Max Projects in CV</label>
+            <label className="label mb-1">Max Projects in CV</label>
             <input
               type="number"
               min={0}
@@ -131,7 +129,7 @@ export default function PositionModal({
           </div>
         </div>
 
-        <label className="label">Attributes for this Position</label>
+        <label className="label mb-1">Attributes for this Position</label>
         <input
           className="input input-bordered input-sm w-full mb-2"
           placeholder="Search attributes by prefix…"

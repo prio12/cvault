@@ -31,7 +31,7 @@ export default function Navbar() {
             <Link to="/profile" className="btn btn-ghost btn-sm">
               Profile
             </Link>
-            <span className="text-sm text-base-content/60 hidden sm:inline">
+            <span className="text-xs mr-2 text-base-content/60 hidden sm:inline">
               {user.name} · {user.role}
             </span>
             <button className="btn btn-sm btn-error" onClick={handleLogout}>

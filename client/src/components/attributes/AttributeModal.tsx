@@ -57,14 +57,14 @@ export default function AttributeModal({
           {attribute ? "Edit Attribute" : "New Attribute"}
         </h3>
 
-        <label className="label">Name</label>
+        <label className="label mb-2">Name</label>
         <input
           className="input input-bordered w-full mb-3"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
-        <label className="label">Category</label>
+        <label className="label mb-2">Category</label>
         <select
           className="select select-bordered w-full mb-3"
           value={cat}
@@ -77,7 +77,7 @@ export default function AttributeModal({
           ))}
         </select>
 
-        <label className="label">Data Type</label>
+        <label className="label mb-2">Data Type</label>
         <select
           className="select select-bordered w-full mb-3"
           value={dataType}
@@ -91,7 +91,7 @@ export default function AttributeModal({
         </select>
         {dataType === "DROPDOWN" && (
           <>
-            <label className="label">
+            <label className="label mb-2">
               Options (one per line — e.g. Beginner / Intermediate / Advanced)
             </label>
             <textarea
@@ -104,7 +104,7 @@ export default function AttributeModal({
           </>
         )}
 
-        <label className="label">Description (optional)</label>
+        <label className="label mb-2">Description (optional)</label>
         <textarea
           className="textarea textarea-bordered w-full mb-4"
           value={description}
