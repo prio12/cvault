@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
+import { useAuthStore } from "./useAuthStore";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -92,6 +93,13 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         saving: false,
         conflict: false,
       });
+
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser) {
+        const updatedUser = { ...currentUser, name: data.name };
+        useAuthStore.setState({ user: updatedUser });
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
     } catch (err: any) {
       set({ error: err.message, saving: false });
     }
