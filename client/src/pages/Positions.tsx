@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { usePositionStore, type Position } from "../store/usePositionStore";
 import { useAuthStore } from "../store/useAuthStore";
 import PositionModal from "../components/positions/PositionModal";
+import { useNavigate } from "react-router-dom";
 
 export default function Positions() {
   const {
@@ -26,6 +27,7 @@ export default function Positions() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Position | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPositions();
@@ -112,8 +114,10 @@ export default function Positions() {
               positions.map((pos) => (
                 <tr
                   key={pos.id}
-                  className={canManage ? "hover cursor-pointer" : ""}
-                  onClick={() => canManage && openEdit(pos)}
+                  className="hover cursor-pointer"
+                  onClick={() =>
+                    canManage ? openEdit(pos) : navigate(`/positions/${pos.id}`)
+                  }
                 >
                   {canManage && (
                     <td onClick={(e) => e.stopPropagation()}>

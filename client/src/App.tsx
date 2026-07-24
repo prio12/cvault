@@ -8,6 +8,8 @@ import AuthSuccessPage from "./pages/authentications/AuthSuccess";
 import Profile from "./pages/Profile";
 import Attributes from "./pages/Attributes";
 import Positions from "./pages/Positions";
+import PositionDetail from "./pages/PositionDetail";
+import CVPage from "./pages/CVPage";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("token");
@@ -25,6 +27,7 @@ export default function App() {
         <Route path="/auth-success" element={<AuthSuccessPage />} />
 
         <Route path="/positions" element={<Positions />} />
+        <Route path="/positions/:id" element={<PositionDetail />} />
 
         <Route
           path="/profile"
@@ -40,6 +43,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Attributes />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/cv/:id"
+          element={
+            <ProtectedRoute>
+              <CVPage />
             </ProtectedRoute>
           }
         />

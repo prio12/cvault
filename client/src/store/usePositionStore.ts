@@ -42,6 +42,7 @@ interface PositionState {
   selectedIds: string[];
   conflict: { current: Position } | null;
   fetchPositions: () => Promise<void>;
+  fetchPosition: (id: string) => Promise<Position>;
   setSearch: (v: string) => void;
   toggleSelected: (id: string) => void;
   createPosition: (data: PositionInput) => Promise<boolean>;
@@ -84,6 +85,12 @@ export const usePositionStore = create<PositionState>((set, get) => ({
     } catch (err: any) {
       set({ error: err.message, loading: false });
     }
+  },
+
+  fetchPosition: async (id: string) => {
+    const res = await fetch(`${API}/api/positions/${id}`);
+    if (!res.ok) throw new Error("Failed to load position");
+    return res.json();
   },
 
   setSearch: (v) => {

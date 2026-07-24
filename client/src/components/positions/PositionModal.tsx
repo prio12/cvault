@@ -15,6 +15,8 @@ export default function PositionModal({
 }) {
   const { attributes, fetchAttributes } = useAttributeStore();
 
+  console.log(position, "from position modal");
+
   const [title, setTitle] = useState(position?.title || "");
   const [company, setCompany] = useState(position?.company || "");
   const [description, setDescription] = useState(position?.description || "");
@@ -24,7 +26,7 @@ export default function PositionModal({
   const [attrSearch, setAttrSearch] = useState("");
 
   const [selectedAttrIds, setSelectedAttrIds] = useState<Set<string>>(
-    new Set(position?.attributes.map((pa) => pa.attributeId) || []),
+    new Set(position?.attributes?.map((pa) => pa.attributeId) || []),
   );
 
   useEffect(() => {
