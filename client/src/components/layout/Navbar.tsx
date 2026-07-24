@@ -18,7 +18,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <div className="flex-none gap-2">
+      <div className="flex-none flex items-center gap-2">
         <Link to="/positions" className="btn btn-ghost btn-sm">
           Positions
         </Link>
@@ -31,9 +31,16 @@ export default function Navbar() {
             <Link to="/profile" className="btn btn-ghost btn-sm">
               Profile
             </Link>
-            <span className="text-xs mr-2 text-base-content/60 hidden sm:inline">
-              {user.name} · {user.role}
-            </span>
+
+            <div className="hidden sm:flex items-center gap-2 max-w-[140px]">
+              <span className="text-xs text-base-content/60 truncate">
+                {user.name}
+              </span>
+              <span className="badge badge-primary badge-sm shrink-0">
+                {user.role}
+              </span>
+            </div>
+
             <button className="btn btn-sm btn-error" onClick={handleLogout}>
               Logout
             </button>
