@@ -46,6 +46,7 @@ interface PositionState {
   setSearch: (v: string) => void;
   toggleSelected: (id: string) => void;
   createPosition: (data: PositionInput) => Promise<boolean>;
+  fetchPositionCVs: (positionId: string) => Promise<any[]>;
   updatePosition: (
     id: string,
     data: PositionInput,
@@ -160,6 +161,15 @@ export const usePositionStore = create<PositionState>((set, get) => ({
       headers: authHeaders(),
     });
     await get().fetchPositions();
+  },
+
+  fetchPositionCVs: async (positionId: string) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${API}/api/positions/${positionId}/cvs`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return res.json();
   },
 
   deleteSelected: async () => {

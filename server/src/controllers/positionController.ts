@@ -233,3 +233,33 @@ export const duplicatePosition = async (
     res.status(500).json({ error: "Failed to duplicate position" });
   }
 };
+
+export const getPositionCVs = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const positionId = String(req.params.id);
+  const requester = req.user!;
+
+  const cvs = await prisma.cV.findMany({
+    where: {
+      positionId,
+      ...(requester.role === "ADMIN" ? {} : { status: "PUBLISHED" }),
+    },
+    include: {
+      profile: { include: { user: { select: { name: true } } } },
+      _count: { select: { likes: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  res.json(
+    cvs.map((cv) => ({
+      id: cv.id,
+      status: cv.status,
+      createdAt: cv.createdAt,
+      candidateName: cv.profile.user.name,
+      likes: cv._count.likes,
+    })),
+  );
+};

@@ -109,7 +109,7 @@ export default function PositionModal({
 
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="form-control">
-            <label className="label cursor-pointer justify-start gap-2">
+            <label className="label cursor-pointer justify-start gap-2  ">
               <input
                 type="checkbox"
                 className="toggle toggle-primary"

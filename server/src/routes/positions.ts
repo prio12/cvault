@@ -7,6 +7,7 @@ import {
   updatePosition,
   deletePosition,
   duplicatePosition,
+  getPositionCVs,
 } from "../controllers/positionController";
 
 const router = Router();
@@ -25,6 +26,13 @@ router.put(
   requireAuth,
   requireRole(["RECRUITER", "ADMIN"]),
   updatePosition,
+);
+
+router.get(
+  "/:id/cvs",
+  requireAuth,
+  requireRole(["RECRUITER", "ADMIN"]),
+  getPositionCVs,
 );
 router.delete(
   "/:id",

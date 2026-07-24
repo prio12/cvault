@@ -57,12 +57,23 @@ export default function Positions() {
         <div className="flex-1" />
 
         {canManage && selectedIds.length === 1 && (
-          <button
-            className="btn btn-sm"
-            onClick={() => duplicatePosition(selectedIds[0])}
-          >
-            Duplicate
-          </button>
+          <>
+            <button
+              className="btn btn-sm"
+              onClick={() => {
+                const pos = positions.find((p) => p.id === selectedIds[0]);
+                if (pos) openEdit(pos);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-sm"
+              onClick={() => duplicatePosition(selectedIds[0])}
+            >
+              Duplicate
+            </button>
+          </>
         )}
         {canManage && selectedIds.length > 0 && (
           <button className="btn btn-sm btn-error" onClick={deleteSelected}>
@@ -115,9 +126,7 @@ export default function Positions() {
                 <tr
                   key={pos.id}
                   className="hover cursor-pointer"
-                  onClick={() =>
-                    canManage ? openEdit(pos) : navigate(`/positions/${pos.id}`)
-                  }
+                  onClick={() => navigate(`/positions/${pos.id}`)}
                 >
                   {canManage && (
                     <td onClick={(e) => e.stopPropagation()}>

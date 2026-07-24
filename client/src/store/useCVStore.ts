@@ -47,6 +47,7 @@ interface CVState {
   fetchMyCVs: () => Promise<void>;
   setAttributeValue: (attributeId: string, value: string) => void;
   saveAttributeValue: (attributeId: string, value: string) => Promise<boolean>;
+  deleteCV: (id: string) => Promise<boolean>;
   publish: () => Promise<boolean>;
   clearPublishError: () => void;
 }
@@ -151,6 +152,17 @@ export const useCVStore = create<CVState>((set, get) => ({
       set({ error: err.message });
       return false;
     }
+  },
+
+  deleteCV: async (id: string) => {
+    const res = await fetch(`${API}/api/cv/${id}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    if (res.ok) {
+      set((s) => ({ myCVs: s.myCVs.filter((cv) => cv.id !== id) }));
+    }
+    return res.ok;
   },
 
   publish: async () => {
